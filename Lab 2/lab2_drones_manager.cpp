@@ -1,4 +1,13 @@
 //Bryan Guan (20844857), Aidan Walker (20823540), Luca Cristiano (20843293)
+/*
+Changed insert function
+	- Added base cases for insert front and insert back when index was 0 and index 
+		was size-1
+	- Updating size twice when inserting as the main insert was not encapsulated 
+		in else statement
+Changed replace function
+	-  Added base cases for index 0 and size != 1 and index = size-1 and size != 1
+*/
 #include "lab2_drones_manager.hpp"
 #include <cstdlib>
 #include <iostream>
@@ -59,7 +68,7 @@ unsigned int DronesManager::search(DroneRecord value) const {
 	if (!first)
 		return 0;
 		
-	DroneRecord *temp = new DroneRecord(*first);
+	DroneRecord *temp = first;
 	int counter = 0;
 
 	while (temp->next != NULL && !(*temp == value)){
@@ -67,12 +76,8 @@ unsigned int DronesManager::search(DroneRecord value) const {
 		temp = temp->next;
 	}
 	if (*temp == value) {
-		delete temp;
-		temp = NULL;
 		return counter;	
 	}
-	delete temp;
-	temp = NULL;
 	return size;
 }
 
@@ -99,18 +104,25 @@ bool DronesManager::insert(DroneRecord value, unsigned int index) {
 
 	if(index > size)
 		return false;
-	
-	for(int i = 0; i < index-1; i++)
-	{
-		curr = curr->next;
+	else if (index == size){
+		insert_back(value);
 	}
+	else if (index == 0)
+		insert_front(value);
+	else
+	{
+		for(int i = 0; i < index-1; i++)
+		{
+			curr = curr->next;
+		}
 	
-	insertVal->next = curr->next;
-	insertVal->prev = curr;
-	curr->next = insertVal;
-	insertVal->next->prev = insertVal;
+		insertVal->next = curr->next;
+		insertVal->prev = curr;
+		curr->next = insertVal;
+		insertVal->next->prev = insertVal;
 	
-	++size;
+		++size;
+	}
 	return true;
 }
 //changed insert_front 
@@ -267,7 +279,7 @@ bool DronesManager::replace(unsigned int index, DroneRecord value) {
 	DroneRecord* curr = first;
 	DroneRecord* insertVal = new DroneRecord(value);
 
-	if(index > size || index < 0)
+	if(index >= size)
 		return false;
 	
 	if(empty()){
@@ -276,8 +288,7 @@ bool DronesManager::replace(unsigned int index, DroneRecord value) {
 	
 	else if (index == 0 && size == 1)
 	{
-		delete (curr);
-		curr = NULL;
+		remove_front();
 
 		first = insertVal;
 		last = insertVal; 
@@ -285,9 +296,19 @@ bool DronesManager::replace(unsigned int index, DroneRecord value) {
 		insertVal->next = NULL;
 		insertVal->prev = NULL;	
 	}
+	else if (index == 0 && size != 1)
+	{
+		remove_front();		
+		insert_front(value);
+	}
+	else if (index == size-1 && size != 1)
+	{
+		remove_back();	
+		insert_back(value);
+	}
 	else
 	{
-		for(int i = 0; i < index-1; i++)
+		for(int i = 0; i < index - 1; i++)
 			curr = curr->next;
 		
 		DroneRecord* temp = curr->next;

@@ -43,7 +43,7 @@ public:
 		DronesManager manager1, manager2;
 		for(int i = 0; i < 4; i++)
 			manager1.insert_back(DronesManager::DroneRecord(i));
-		
+			
 		ASSERT_TRUE(manager1.get_size() == 4 && manager2.get_size()==0)
 		ASSERT_TRUE(manager1.first->prev == NULL && manager1.last->next == NULL)
 		ASSERT_TRUE(manager2.select(4) == DronesManager::DroneRecord(0))
@@ -85,7 +85,7 @@ public:
 	    manager1.insert_front(DronesManager::DroneRecord(400));
 	    manager1.replace(1, DronesManager::DroneRecord(500));
 	    ASSERT_TRUE(manager1.select(1) == DronesManager::DroneRecord(500))
-   
+
 	    DronesManager manager2;
 	    ASSERT_FALSE(manager2.replace(1, DronesManager::DroneRecord(500)))
 	    
@@ -103,13 +103,15 @@ public:
 	    ASSERT_TRUE(*manager3.last == DronesManager::DroneRecord(400))
 	    ASSERT_TRUE(*(manager3.last->prev) == DronesManager::DroneRecord(200))
 	    ASSERT_TRUE(*(manager3.first->next) == DronesManager::DroneRecord(100))
-	    
+ 
 	   	DronesManager manager4;
 	   	
 	   	ASSERT_FALSE(manager4.reverse_list())
 	   	
 	   	ASSERT_TRUE(manager4.first == NULL)
+	   	
 	    return true;
+	    
 	}
 	
 	// PURPOSE: insert_front() keeps moving elements forward
@@ -236,26 +238,6 @@ public:
 	   	return true;
 	} 
 	
-	//PURPOSE: test the remove at an index function
-	bool test11() {
-		DronesManager manager1, manager2, manager3;
-		for(int i = 0; i < 4; i++)
-			manager1.insert_back(DronesManager::DroneRecord(i));
-		
-		manager2.insert_back(DronesManager::DroneRecord(0));
-		manager2.insert_back(DronesManager::DroneRecord(1));
-		manager2.insert_back(DronesManager::DroneRecord(3));
-		
-		ASSERT_TRUE(manager1.get_size() == 4 && manager2.get_size() == 3)
-		
-		manager1.remove(2);
-	
-		ASSERT_TRUE(manager1.select(2) == manager2.select(2))
-		ASSERT_TRUE(manager1.get_size() == manager2.get_size() && manager1.get_size() == 3)
-		ASSERT_TRUE (manager1.remove(10) == false && manager1.remove(-2) == false)
-		ASSERT_TRUE(manager3.remove(0) == false)
-		return true;
-	}
 };
 
 #endif
